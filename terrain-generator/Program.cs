@@ -9,15 +9,17 @@ namespace NoiseMapGenerator
     {
         static void Main(string[] args)
         {
-            var width = 800;
-            var height = 600;
+            var width = int.Parse(args[0]);
+            var height = int.Parse(args[1]);
+            var threshold = int.Parse(args[2]);
+
             var heightmap = new Bitmap(width, height);
             var diffusemap = new Bitmap(width, height);
             var random = new Random();
-            var seed = random.Next(Int32.MaxValue);
+            var seed = random.Next(int.MaxValue);
             var fastNoise = new FastNoise(seed);
-            fastNoise.SetNoiseType(NoiseType.PerlinFractal);
-            fastNoise.SetFrequency(0.01f);
+            fastNoise.SetNoiseType(NoiseType.Perlin);
+            fastNoise.SetFrequency(0.005f);
             fastNoise.SetInterp(Interp.Quintic);
             fastNoise.SetFractalType(FractalType.FBM);
             fastNoise.SetFractalOctaves(5);
@@ -47,16 +49,10 @@ namespace NoiseMapGenerator
 
                     Color diffuseColor;
 
-                    if (noise < 60)
-                        diffuseColor = Color.FromArgb(120, 120, 120);
-                    else if (noise > 60 && noise <= 80)
-                        diffuseColor = Color.FromArgb(87, 165, 38);
-                    else if (noise > 80 && noise <= 100)
-                        diffuseColor = Color.FromArgb(112, 214, 49);
-                    else if (noise > 100 && noise <= 130)
-                        diffuseColor = Color.FromArgb(226, 190, 106);
+                    if (noise < threshold)
+                        diffuseColor = Color.FromArgb(0, 0, 0);
                     else
-                        diffuseColor = Color.FromArgb(34, 133, 214);
+                        diffuseColor = Color.FromArgb(255, 255, 255);
 
                     diffusemap.SetPixel(x, y, diffuseColor);
                 }
